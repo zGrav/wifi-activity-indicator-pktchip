@@ -1,0 +1,35 @@
+#!/bin/sh -e
+# Script to dispatch NetworkManager events
+#
+# Runs ifupdown scripts when NetworkManager fiddles with interfaces.
+# See NetworkManager(8) for further documentation of the dispatcher events.
+
+if [ -z "$1" ]; then
+    echo "$0: called with no interface" 1>&2
+    exit 1;
+fi
+
+# Run the right scripts
+if [ $1 = "wlan0" ]; then
+  case "$2" in
+      up|vpn-up)
+      echo 1 > "/sys/class/leds/chip:white:status/brightness"
+      if ! pgrep wifi-ind > /dev/null 2>&1 ; then
+        /usr/local/bin/wifi-ind
+      fi
+      ;;
+      down|vpn-down)
+      if pgrep wifi-ind > /dev/null 2>&1 ; then
+        killall -9 wifi-ind
+      fi
+      echo 0 > "/sys/class/leds/chip:white:status/brightness"
+      ;;
+      hostname|dhcp4-change|dhcp6-change)
+      # Do nothing
+      ;;
+      *)
+      echo "$0: called with unknown action \`$2'" 1>&2
+      exit 1
+      ;;
+  esac
+fi
