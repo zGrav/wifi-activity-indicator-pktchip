@@ -18,3 +18,5 @@ The default location of wifi-ind is `/usr/local/bin`, for the 10wifiled script t
 This code will probably work in whatever device with accessible LEDs if you do some tweaks.
 
 Also please keep in mind, that in this particular Pocket CHIP case I use nmtui to configure my networks.
+
+e.g https://twitter.com/notzGrav/status/975521212997816321
